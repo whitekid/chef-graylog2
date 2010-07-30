@@ -28,7 +28,7 @@
 
 include_recipe "build-essential"
 
-$w{ libpcre3 libpcre3-dev libssl-dev zlib1g-dev libperl-dev }.each do |devpkg|
+%w{ libpcre3 libpcre3-dev libssl-dev zlib1g-dev libperl-dev }.each do |devpkg|
   package devpkg
 end
 
