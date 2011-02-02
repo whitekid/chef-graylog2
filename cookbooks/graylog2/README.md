@@ -9,6 +9,9 @@ Recipes
 default
 -------
 
+Downloads graylog2-server and graylog2-web-interface from github downloads, unpacks and
+links them.  Then sets up graylog2 service using /etc/init.d/graylog2 (provided) and 
+enables/starts it.  Does not yet install/configure webui.
 
 Resources/Providers
 ===================
@@ -23,7 +26,7 @@ License and Author
 
 Author:: J.B. Zimmerman (<jzimmerman@mdsol.com>)
 
-Copyright 2011 Medidatao Solutions, Inc.
+Copyright 2011 Medidata Solutions, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
