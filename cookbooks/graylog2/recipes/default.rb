@@ -49,17 +49,19 @@ directory "#{node[:graylog2][:basedir]}/src" do
   recursive true
 end
 
-# use remote_file to grab the desired version of graylog2-server package
-remote_file "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz" do
+# Use remote_file to grab the desired version of graylog2-server package
+remote_file "graylog2_server" do
+  path "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz"
   source "https://github.com/downloads/Graylog2/graylog2-server/graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz"
   action :create_if_missing
 end
 
-# unpack graylog2-server
+# Unpack graylog2-server
 execute "unpack_graylog2_server" do
   cwd "#{node[:graylog2][:basedir]}/src"
   command "tar zxf graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz"
   creates "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}/build_date"
+  subscribes :run, resources(:remote_file => "graylog2_server"), :immediately
 end
 
 # Link graylog2-server
@@ -77,7 +79,7 @@ end
 
 # Install init.d script
 template "/etc/init.d/graylog2" do
-  source "init_d-graylog2.erb"
+  source "graylog2.init.erb"
   owner "root"
   group "root"
   mode 0755
@@ -91,10 +93,8 @@ execute "update-rcd-graylog2" do
   notifies :start, "service[graylog2]", :delayed
 end
 
-# FIX THIS - it's ALWAYS starting the service!
 # Service def for graylog2
 service "graylog2" do
   supports :restart => true
   action [ :enable, :start ]
 end
-

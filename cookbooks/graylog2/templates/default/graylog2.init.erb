@@ -8,17 +8,15 @@
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: starts the graylog2 java server
-# Description:       starts graylog2-server
+# Short-Description: starts the graylog2 server
+# Description:       starts the graylog2 java server using the graylog2 control script
 ### END INIT INFO
 #
 #  Once installed, use "sudo update-rc.d graylog2 defaults" to enable!
 
-GRAYLOG2JAR=<%= node[:graylog2][:basedir] %>/server/graylog2-server.jar
+BINDIR=<%= node[:graylog2][:basedir] %>/server/bin
 NAME=graylog2
 DESC=graylog2
-PID_FILE=/tmp/$NAME.pid
-NOHUP=`which nohup`
 
 test -x /usr/bin/java || exit 0
 
@@ -27,21 +25,21 @@ set -e
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$NOHUP java -jar $GRAYLOG2JAR > /var/log/graylog2.log 2>&1 &
+	cd $BINDIR
+        graylog2ctl start
 	echo "...started."
         ;;
   stop)
         echo -n "Stopping $DESC: "
-	PID=`cat $PID_FILE`
-	kill $PID
+        cd $BINDIR
+	graylog2ctl stop
 	echo "...stopped."
         ;;
   restart)
         echo -n "Restarting $DESC: "
-        PID=`cat $PID_FILE`
-        kill $PID
-        $NOHUP java -jar $GRAYLOG2JAR > /var/log/graylog2.log 2>&1 &
-	echo "...Restarted."
+        cd $BINDIR
+	graylog2ctl restart
+	echo "...restarted."
         ;;
   *)
         N=/etc/init.d/$NAME
