@@ -32,7 +32,7 @@ gem_package "rake" do
 end
 
 # Install required apt packages
-%w{ build-essential make rrdtool rake libopenssl-ruby libapache2-mod-passenger libmysqlclient-dev ruby-dev mysql-server }.each do |pkg|
+%w{ build-essential make rrdtool rake libopenssl-ruby libmysqlclient-dev ruby-dev mysql-server }.each do |pkg|
   package pkg do
     action :install
   end
@@ -118,3 +118,4 @@ execute "webui_rake_dbmigrate" do
   not_if "test -f #{node[:graylog2][:basedir]}/web/.db_migrated" # Ooh, the hack.
 end
 
+# Install apache site template
