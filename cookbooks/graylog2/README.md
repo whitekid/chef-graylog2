@@ -49,6 +49,10 @@ syslog-ng as they may have already snabbled up port 514.  The cookbook *does* su
 it should be able to bind udp/514 at startup.  Stop/Start/restart Graylog2 using the installed init.d
 script (/etc/init.d/graylog2 stop|start|restart).  TODO: convert to an upstart job.
 
+Also also note - I have pegged the version of Bundler this cookbook installs at 1.0.3 due to requirements
+of our infrastructure.  If you already use a different bundler, or want to use the latest, remove the
+"version" statement from the gem-package "bundler" resource in web-interface.rb.
+
 License and Author
 ==================
 
