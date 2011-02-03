@@ -3,6 +3,9 @@ Description
 
 Installs and configures a Graylog2 server on Ubuntu systems (10.04 only at present).
 
+This is a Chef re-engineering of the Sean Porter (@portertech) Linode StackScript for graylog2, 
+available here:  http://is.gd/cWA0w9
+
 Recipes
 =======
 
