@@ -24,22 +24,22 @@ set -e
 
 case "$1" in
   start)
-	echo -n "Starting $DESC: "
-	cd $BINDIR
+        echo -n "Starting $DESC: "
+        cd $BINDIR
         graylog2ctl start
-	echo "...started."
+        echo "...started."
         ;;
   stop)
         echo -n "Stopping $DESC: "
         cd $BINDIR
-	graylog2ctl stop
-	echo "...stopped."
+        graylog2ctl stop
+        echo "...stopped."
         ;;
   restart)
         echo -n "Restarting $DESC: "
         cd $BINDIR
-	graylog2ctl restart
-	echo "...restarted."
+        graylog2ctl restart
+        echo "...restarted."
         ;;
   *)
         N=/etc/init.d/$NAME
