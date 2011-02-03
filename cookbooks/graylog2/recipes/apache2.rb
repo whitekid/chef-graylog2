@@ -42,10 +42,10 @@ end
 
 # Add site using apache_site def
 apache_site "graylog2" do
-  action :enable
+  enable
 end
 
 # Remove default site, if enabled
-apache_site "default" do  # seems to have this value on Ubuntu default installs?
-  action :disable
+apache_site "000-default" do  # seems to have this value on Ubuntu default installs?
+  enable false
 end
