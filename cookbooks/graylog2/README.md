@@ -9,9 +9,6 @@ Recipes
 default
 -------
 
-Downloads graylog2-server and graylog2-web-interface from github downloads, unpacks and
-links them.  Then sets up graylog2 service using /etc/init.d/graylog2 (provided) and 
-enables/starts it.  Does not yet install/configure webui.
 
 Resources/Providers
 ===================

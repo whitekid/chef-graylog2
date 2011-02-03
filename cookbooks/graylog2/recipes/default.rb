@@ -34,7 +34,7 @@ apt_repository "mongoDB" do
 end
 
 # Install required apt packages
-%w{ build-essential make rrdtool openjdk-6-jre rake libopenssl-ruby libmysqlclient-dev ruby-dev libapache2-mod-passenger postfix mongodb-stable mysql-server }.each do |pkg|
+%w{ openjdk-6-jre postfix mongodb-stable }.each do |pkg|
   package pkg do
     action :install
   end
@@ -49,45 +49,22 @@ directory "#{node[:graylog2][:basedir]}/src" do
   recursive true
 end
 
-# unpack and link graylog2 server; notified by remote_file stanza later
-bash "unpack_graylog2_server" do
-  cwd "#{node[:graylog2][:basedir]}/src"
-  code <<-EOH
-    tar zxf graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz
-    ln -sf #{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]} #{node[:graylog2][:basedir]}/server
-  EOH
-  creates "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}/build_date"
-  action :nothing
-end
-
-# unpack and link graylog2_webui; notified by remote_file stanza later
-bash "unpack_graylog2_webui" do
-  cwd "#{node[:graylog2][:basedir]}/src"
-  code <<-EOH
-    tar zxf graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz
-    ln -sf #{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]} #{node[:graylog2][:basedir]}/web
-  EOH
-  creates "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}/build_date"
-  action :nothing
-end
-
 # use remote_file to grab the desired version of graylog2-server package
 remote_file "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz" do
   source "https://github.com/downloads/Graylog2/graylog2-server/graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz"
   action :create_if_missing
-  notifies :run, "bash[unpack_graylog2_server]"
 end
 
-# use remote_file to grab the desired version of graylog2-web-interface
-remote_file "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz" do
-  source "https://github.com/downloads/Graylog2/graylog2-web-interface/graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz"
-  action :create_if_missing
-  notifies :run, "bash[unpack_graylog2_webui]"
+# unpack graylog2-server
+execute "unpack_graylog2_server" do
+  cwd "#{node[:graylog2][:basedir]}/src"
+  command "tar zxf graylog2-server-#{node[:graylog2][:serverversion]}.tar.gz"
+  creates "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}/build_date"
 end
 
-# Ensure bundler is available
-gem_package "bundler" do
-  action :install
+# Link graylog2-server
+link "#{node[:graylog2][:basedir]}/server" do
+  to "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}"
 end
 
 # Install graylog.conf from template
@@ -98,31 +75,26 @@ template "/etc/graylog2.conf" do
   mode 0644
 end
 
-# Link conf file 
-link "/etc/graylog2.conf" do
-  to "#{node[:graylog2][:basedir]}/server/graylog2.conf"
-  only_if "test -f #{node[:graylog2][:basedir]}/server/graylog2.conf"
-end
-
-# Update the rc.d system for graylog
-execute "update-rcd-graylog2" do
-  command "update-rc.d graylog2 defaults"
-  creates "/etc/rc0.d/K20graylog2"
-  action :nothing
-  notifies :start, "service[graylog2]"
-end
-
 # Install init.d script
 template "/etc/init.d/graylog2" do
   source "init_d-graylog2.erb"
   owner "root"
   group "root"
   mode 0755
-  notifies :run, "execute[update-rcd-graylog2]"
 end
 
+# Update the rc.d system for graylog
+execute "update-rcd-graylog2" do
+  command "update-rc.d graylog2 defaults"
+  creates "/etc/rc0.d/K20graylog2"
+  notifies :enable, "service[graylog2]", :immediately
+  notifies :start, "service[graylog2]", :delayed
+end
+
+# FIX THIS - it's ALWAYS starting the service!
 # Service def for graylog2
 service "graylog2" do
   supports :restart => true
   action [ :enable, :start ]
 end
+
