@@ -96,5 +96,5 @@ end
 # Service def for graylog2
 service "graylog2" do
   supports :restart => true
-  action [ :enable, :start ]
+  action :enable
 end
