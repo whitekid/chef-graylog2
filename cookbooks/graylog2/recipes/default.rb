@@ -34,7 +34,7 @@ apt_repository "mongoDB" do
 end
 
 # Install required apt packages
-%w{ openjdk-6-jre postfix mongodb-stable }.each do |pkg|
+%w{ openjdk-6-jre mongodb-stable }.each do |pkg|
   package pkg do
     action :install
   end
