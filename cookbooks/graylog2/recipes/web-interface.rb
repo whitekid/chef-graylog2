@@ -63,7 +63,8 @@ execute "unpack_graylog2_webui" do
 end
 
 # Link graylog2-web-interface
-link "#{node[:graylog2][:basedir]}/web" do
+link "graylog2_webui" do
+  target_file  "#{node[:graylog2][:basedir]}/web"
   to "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}"
 end
 
@@ -71,7 +72,8 @@ end
 execute "webui_bundle" do
   cwd "#{node[:graylog2][:basedir]}/web"
   command "bundle install"
-  subscribes :run, resources(:link => "#{node[:graylog2][:basedir]}/web"), :immediately
+  action :nothing
+  subscribes :run, resources(:link => "graylog_webui"), :immediately
 end
 
 # Create rails app configs
@@ -89,6 +91,7 @@ end
 execute "webui_rake_dbcreate" do
   cwd "#{node[:graylog2][:basedir]}/web"
   command "rake db:create RAILS_ENV=production"
+  action :nothing
   subscribes :run, resources(:template => ["webui_database_config", "webui_general_config"]), :immediately
 end
 
@@ -96,16 +99,15 @@ end
 execute "webui_rake_dbmigrate" do
   cwd "#{node[:graylog2][:basedir]}/web"
   command "rake db:migrate RAILS_ENV=production"
+  action :nothing
   subscribes :run, resources(:execute => "webui_rake_dbcreate"), :immediately
 end
 
 # Chown the graylog2 directory to nobody/nogroup to allow web servers to serve it
 execute "webui_chown" do
-  cwd node[:graylog2][:basedir]
-  command "sudo chown -R nobody:nogroup web"
+  cwd "#{node[:graylog2][:basedir]}/src"
+  command "sudo chown -R nobody:nogroup graylog2-web-interface-#{node[:graylog2][:webuiversion]}"
   not_if do
-    File.stat("#{node[:graylog2][:basedir]}/web").uid == 65534
+    File.stat("#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}").uid == 65534
   end
 end
-
-# Install apache site template
