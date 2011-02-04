@@ -59,7 +59,6 @@ execute "unpack_graylog2_webui" do
   cwd "#{node[:graylog2][:basedir]}/src"
   command "tar zxf graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz"
   creates "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}/build_date"
-  subscribes :run, resources(:link => "graylog2_webui"), :immediately
 end
 
 # Link graylog2-web-interface
@@ -73,7 +72,7 @@ execute "webui_bundle" do
   cwd "#{node[:graylog2][:basedir]}/web"
   command "bundle install"
   action :nothing
-  subscribes :run, resources(:link => "graylog_webui"), :immediately
+  subscribes :run, resources(:link => "graylog2_webui"), :immediately
 end
 
 # Create rails app configs
