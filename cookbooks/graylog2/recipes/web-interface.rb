@@ -47,17 +47,19 @@ directory "#{node[:graylog2][:basedir]}/src" do
   recursive true
 end
 
-# use remote_file to grab the desired version of graylog2-web-interface
-remote_file "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz" do
+# Use remote_file to grab the desired version of graylog2-web-interface
+remote_file "graylog2_webui" do
+  path "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz"
   source "https://github.com/downloads/Graylog2/graylog2-web-interface/graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz"
   action :create_if_missing
 end
 
-# unpack graylog2-web-interface
+# Unpack graylog2-web-interface
 execute "unpack_graylog2_webui" do
   cwd "#{node[:graylog2][:basedir]}/src"
   command "tar zxf graylog2-web-interface-#{node[:graylog2][:webuiversion]}.tar.gz"
   creates "#{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}/build_date"
+  subscribes :run, resources(:link => "graylog2_webui"), :immediately
 end
 
 # Link graylog2-web-interface
@@ -69,53 +71,41 @@ end
 execute "webui_bundle" do
   cwd "#{node[:graylog2][:basedir]}/web"
   command "bundle install"
-  not_if "cd #{node[:graylog2][:basedir]}/web && bundle check | grep 'dependencies are satisfied'"
- end
+  subscribes :run, resources(:link => "#{node[:graylog2][:basedir]}/web"), :immediately
+end
 
-# Create log directory
-directory "#{node[:graylog2][:basedir]}/web/log" do
-  owner "nobody"
-  group "nogroup"
-  mode 0755
+# Create rails app configs
+%w{ database general }.each do |conf|
+  template "webui_#{conf}_config" do
+    path "#{node[:graylog2][:basedir]}/web/config/#{conf}.yml"
+    source "#{conf}.yml.erb"
+    owner "nobody"
+    group "nogroup"
+    mode 0644
+  end
+end
+
+# Perform rake db:create
+execute "webui_rake_dbcreate" do
+  cwd "#{node[:graylog2][:basedir]}/web"
+  command "rake db:create RAILS_ENV=production"
+  subscribes :run, resources(:template => ["webui_database_config", "webui_general_config"]), :immediately
+end
+
+# Perform rake db:migrate
+execute "webui_rake_dbmigrate" do
+  cwd "#{node[:graylog2][:basedir]}/web"
+  command "rake db:migrate RAILS_ENV=production"
+  subscribes :run, resources(:execute => "webui_rake_dbcreate"), :immediately
 end
 
 # Chown the graylog2 directory to nobody/nogroup to allow web servers to serve it
 execute "webui_chown" do
-  cwd "#{node[:graylog2][:basedir]}/src"
-  command "sudo chown -R nobody:nogroup #{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]}"
-  not_if "ls -ald #{node[:graylog2][:basedir]}/src/graylog2-web-interface-#{node[:graylog2][:webuiversion]} | grep \"nobody nogroup\""
-end
-
-# Install database.yml
-template "webui_database-yml" do
-  path "#{node[:graylog2][:basedir]}/web/config/database.yml"
-  source "database_yml.erb"
-  owner "nobody"
-  group "nogroup"
-  mode 0644
-end
-
-# Install general.yml
-template "webui_general-yml" do
-  path "#{node[:graylog2][:basedir]}/web/config/general.yml"
-  source "general_yml.erb"
-  owner "nobody"
-  group "nogroup"
-  mode 0644
-end
-
-# Perform rake db:create if necessary
-execute "webui_rake_dbcreate" do
-  cwd "#{node[:graylog2][:basedir]}/web"
-  command "sudo -u nobody rake db:create RAILS_ENV=production && touch ./.db_created"
-  not_if "test -f #{node[:graylog2][:basedir]}/web/.db_created"  # Ooh, the hack.
-end
-
-# Perform rake db:migrate if necessary
-execute "webui_rake_dbmigrate" do
-  cwd "#{node[:graylog2][:basedir]}/web"
-  command "sudo -u nobody rake db:migrate RAILS_ENV=production && touch ./.db_migrated"
-  not_if "test -f #{node[:graylog2][:basedir]}/web/.db_migrated" # Ooh, the hack.
+  cwd node[:graylog2][:basedir]
+  command "sudo chown -R nobody:nogroup web"
+  not_if do
+    File.stat("#{node[:graylog2][:basedir]}/web").uid == 65534
+  end
 end
 
 # Install apache site template
