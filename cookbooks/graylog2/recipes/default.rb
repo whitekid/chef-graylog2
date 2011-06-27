@@ -34,11 +34,8 @@ apt_repository "mongoDB" do
 end
 
 # Install required apt packages
-%w{ openjdk-6-jre mongodb-stable }.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+package "openjdk-6-jre"
+package "mongodb-stable"
 
 # Create application directory
 directory "#{node[:graylog2][:basedir]}/src" do
@@ -69,7 +66,7 @@ link "#{node[:graylog2][:basedir]}/server" do
   to "#{node[:graylog2][:basedir]}/src/graylog2-server-#{node[:graylog2][:serverversion]}"
 end
 
-# Install graylog.conf from template
+# Create graylog2.conf
 template "/etc/graylog2.conf" do
   source "graylog2.conf.erb"
   owner "root"
@@ -77,7 +74,7 @@ template "/etc/graylog2.conf" do
   mode 0644
 end
 
-# Install init.d script
+# Create init.d script
 template "/etc/init.d/graylog2" do
   source "graylog2.init.erb"
   owner "root"
@@ -85,15 +82,13 @@ template "/etc/init.d/graylog2" do
   mode 0755
 end
 
-# Update the rc.d system for graylog
-execute "update-rcd-graylog2" do
-  command "update-rc.d graylog2 defaults"
+# Update the rc.d system
+execute "update-rc.d graylog2 defaults" do
   creates "/etc/rc0.d/K20graylog2"
-  notifies :enable, "service[graylog2]", :immediately
   notifies :start, "service[graylog2]", :delayed
 end
 
-# Service def for graylog2
+# Service resource
 service "graylog2" do
   supports :restart => true
   action :enable
