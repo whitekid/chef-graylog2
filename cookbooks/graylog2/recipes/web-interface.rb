@@ -17,19 +17,9 @@
 # limitations under the License.
 #
 
-# Install graylog2 server
-include_recipe "graylog2::default"
-
-# Ensure bundler is available
-gem_package "bundler" do
-  version "1.0.3"  # Put in for our infrastructure requirements at MDSOL
-  action :install
-end
-
-# Ensure rake is available
-gem_package "rake" do
-  action :install
-end
+# Bootstrap gem dependencies
+gem_package "bundler"
+gem_package "rake"
 
 # Install required apt packages
 %w{ build-essential make rrdtool rake libopenssl-ruby libmysqlclient-dev ruby-dev postfix mysql-server }.each do |pkg|
