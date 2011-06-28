@@ -35,7 +35,7 @@ end
 
 # Install required apt packages
 package "openjdk-6-jre"
-package "mongodb-stable"
+package "mongodb-10gen"
 
 # Create application directory
 directory "#{node[:graylog2][:basedir]}/src" do
