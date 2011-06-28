@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: graylog2
-# Recipe:: default
+# Recipe:: server
 #
 # Copyright 2010, Medidata Solutions Inc.
 #
@@ -25,9 +25,9 @@ execute "get_mongodb_pubkey" do
 end
 
 # Add mongodb repository to apt
-apt_repository "mongoDB" do
-  uri "http://downloads.mongodb.org/distros/ubuntu"
-  distribution "10.4"
+apt_repository "mongodb" do
+  uri "http://downloads-distro.mongodb.org/repo/ubuntu-upstart"
+  distribution "dist"
   components ["10gen"]
   action :add
   notifies :run, "execute[get_mongodb_pubkey]", :immediately
