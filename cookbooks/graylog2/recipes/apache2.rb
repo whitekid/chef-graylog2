@@ -17,35 +17,29 @@
 # limitations under the License.
 #
 
-# Install graylog2 web-interface
-include_recipe "graylog2::web-interface"
+# Install Graylog2 web interface
+include_recipe "graylog2::web_interface"
 
-# Install apache2 using the cookbook.
+# Install Apache using the OpsCode community cookbook
 include_recipe "apache2"
 
 # Install apache mod-passenger (NOTE: This should be added to base apache2 cookbook, but keeping it
 #    here allows the use of the 'vanilla' Opscode apache2 cookbook which doesn't have a mod_passenger.rb
 #    recipe. This should be compatible with the above, since the Opscode cookbook uses apt to install
 #    apache.
-package "libapache2-mod-passenger" do
-  action :install
-end
+package "libapache2-mod-passenger"
 
-# Install template apache vhost config
+# Create an Apache vhost for the Graylog2 web interface
 template "apache-vhost-conf" do
   path "/etc/apache2/sites-available/graylog2"
   source "apache2-graylog2.erb"
-  owner "root"
-  group "root"
   mode 0644
 end
 
-# Add site using apache_site def
-apache_site "graylog2" do
-  enable
-end
-
-# Remove default site, if enabled
-apache_site "000-default" do  # seems to have this value on Ubuntu default installs?
+# Remove the default vhost
+apache_site "000-default" do
   enable false
 end
+
+# Enable the Graylog2 web interface vhost
+apache_site "graylog2"
