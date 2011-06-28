@@ -37,6 +37,7 @@ package "mongodb-10gen"
 # Create the release directory
 directory "#{node.graylog2.basedir}/rel" do
   mode 0755
+  recursive true
 end
 
 # Download the desired version of Graylog2 server from GitHub
