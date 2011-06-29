@@ -58,6 +58,11 @@ execute "bundle install" do
   subscribes :run, resources(:link => "#{node.graylog2.basedir}/web"), :immediately
 end
 
+# Create mongoid.yml
+template "#{node.graylog2.basedir}/web/config/mongoid.yml" do
+  mode 0644
+end
+
 # Create general.yml
 template "#{node.graylog2.basedir}/web/config/general.yml" do
   owner "nobody"
