@@ -62,7 +62,6 @@ end
 
 # Create graylog2.conf
 template "/etc/graylog2.conf" do
-  source "graylog2.conf.erb"
   mode 0644
 end
 
