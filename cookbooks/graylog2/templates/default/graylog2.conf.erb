@@ -4,7 +4,7 @@
 #   - Graylog2 configuration file
 
 # On which port (UDP) should we listen for Syslog messages? (Standard: 514)
-syslog_listen_port = 514
+syslog_listen_port = <%= node.graylog2.port %>
 syslog_protocol = udp
 
 # MongoDB Configuration
