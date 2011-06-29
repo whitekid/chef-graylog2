@@ -32,7 +32,7 @@ package "libapache2-mod-passenger"
 # Create an Apache vhost for the Graylog2 web interface
 template "apache-vhost-conf" do
   path "/etc/apache2/sites-available/graylog2"
-  source "apache2-graylog2.erb"
+  source "graylog2.apache2.erb"
   mode 0644
 end
 
