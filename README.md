@@ -62,8 +62,8 @@ feel free to pester continuously.
 
 ### Repo contributors
 
-  * JBX
-  * Nstielau
-  * Portertech
+  * jbz
+  * nstielau
+  * portertech
   * agoddard
 
