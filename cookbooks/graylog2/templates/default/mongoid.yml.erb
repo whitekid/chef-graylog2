@@ -2,6 +2,6 @@ production:
   host: <%= node.graylog2.mongodb.host %>
   database: <%= node.graylog2.mongodb.database %>
 <% if node.graylog2.mongodb.auth == "true" -%>
-  username: <%= node.graylog2.mongodb.username %>
+  username: <%= node.graylog2.mongodb.user %>
   password: <%= node.graylog2.mongodb.password %>
 <% end -%>
