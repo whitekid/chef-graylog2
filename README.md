@@ -60,4 +60,10 @@ Contributing
 Please contribute updates, additions or documentation changes.  If you don't here back briefly,
 feel free to pester continuously.
 
+### Repo contributors
+
+  * JBX
+  * Nstielau
+  * Portertech
+  * agoddard
 
