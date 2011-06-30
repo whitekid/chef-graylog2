@@ -1,7 +1,13 @@
-This is a blank repository you can use as a starting point for your
-local chef configuration.
+This repository contains the necessary cookbooks to install and configure Graylog2.
 
-For full details on the parts aside from information contained in the
-README files, see the Chef wiki documentation at:
+Here are a few options:
+  1) Copy these cookbooks into your Chef cookbook repository
+  2) Clone this repository to your workstation, an launch Graylog2 in a VM with Vagrant
+  3) Clone this repository to your desired server and install graylog2 with chef-solo.
 
-http://wiki.opscode.com/display/chef/Chef+Repository
+
+== Contributing
+
+Please contribute updates, additions or documentation changes.
+
+
