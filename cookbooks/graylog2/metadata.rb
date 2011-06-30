@@ -2,13 +2,12 @@ maintainer        "Medidata Solutions Inc."
 maintainer_email  "cloudteam@mdsol.com"
 license           "Apache 2.0"
 description       "Installs and configures Graylog2"
-version           "0.0.4"
+version           "0.0.5"
 recipe            "graylog2", "Installs and configures Graylog2"
 
-%w{ ubuntu }.each do |os|
-  supports os
-end
+# Only supporting Ubuntu 10.x
+supports "ubuntu"
 
-%w{ apt apache2 }.each do |pkg|
-  depends pkg
-end
+# OpsCode cookbook dependencies
+depends "apt" # http://community.opscode.com/cookbooks/apt
+depends "apache2" # http://community.opscode.com/cookbooks/apache2
