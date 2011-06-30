@@ -1,10 +1,12 @@
-== Graylog2 Chef Repo
+Graylog2 Chef Repo
+==================
 
 This repository contains the necessary cookbooks to install and configure Graylog2.
 
-== Installing
+Installing
+----------
 
-=== Installing with Chef Server
+### Installing with Chef Server
 
   1) Copy these cookbooks into your repository as needed
   2) Upload cookbooks to your chef-server
@@ -12,7 +14,7 @@ This repository contains the necessary cookbooks to install and configure Graylo
 
 Enjoy your running Graylog2 instance
 
-=== Installing with Chef Solo
+### Installing with Chef Solo
 
   1) Clone this repository
   2) write a solo.rb file:
@@ -37,7 +39,7 @@ Enjoy your running Graylog2 instance
 
 Enjoy your running Graylog2 instance
 
-=== Installing with Chef Vagrant
+### Installing with Chef Vagrant
 
   1) Install vagrant
 
@@ -51,7 +53,9 @@ Enjoy your running Graylog2 instance
 
 Enjoy your running Graylog2 instance (check 127.0.0.1:8080 to access Graylog2)
 
-== Contributing
+
+Contributing
+------------
 
 Please contribute updates, additions or documentation changes.
 
