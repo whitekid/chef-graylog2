@@ -57,6 +57,7 @@ Enjoy your running Graylog2 instance (check 127.0.0.1:8080 to access Graylog2)
 Contributing
 ------------
 
-Please contribute updates, additions or documentation changes.
+Please contribute updates, additions or documentation changes.  If you don't here back briefly,
+feel free to pester continuously.
 
 
