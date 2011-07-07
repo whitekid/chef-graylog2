@@ -3,8 +3,8 @@
 #
 
 <VirtualHost *:80>
-  DocumentRoot <%= node[:graylog2][:basedir] %>/web/public
-  <Directory <%= node[:graylog2][:basedir] %>/web/public>
+  DocumentRoot <%= node.graylog2.basedir %>/web/public
+  <Directory <%= node.graylog2.basedir %>/web/public>
     Allow from all
     Options -MultiViews
   </Directory>
