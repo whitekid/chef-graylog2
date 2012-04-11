@@ -30,6 +30,20 @@ directory "#{node.graylog2.basedir}/rel" do
   recursive true
 end
 
+# Download the elasticsearch dpkg
+
+remote_file "elasticsearch_dpkg" do
+    path "#{node.graylog2.basedir}/rel/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    source "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    action :create_if_missing
+end
+
+dpkg_package "elasticsearch" do
+    source "#{node.graylog2.basedir}/rel/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    version node.graylog2.elasticsearch.version
+    action :install
+end
+
 # Download the desired version of Graylog2 server from GitHub
 remote_file "download_server" do
   path "#{node.graylog2.basedir}/rel/graylog2-server-#{node.graylog2.server.version}.tar.gz"
