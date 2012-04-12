@@ -63,7 +63,7 @@ template "#{node.graylog2.basedir}/web/config/mongoid.yml" do
   mode 0644
 end
 
-external_hostname = node.graylog2.has_key?('external_hostname')     ? node.graylog2.external_hostname :
+external_hostname = node.graylog2.external_hostname     ? node.graylog2.external_hostname :
     (node.has_key?('ec2') and node.ec2.has_key?('public_hostname')) ? node.ec2.public_hostname :
     (node.has_key?('ec2') and node.ec2.has_key?('public_ipv4'))     ? node.ec2.public_ipv4 :
     node.has_key?('fqdn')                                           ? node.fqdn :
