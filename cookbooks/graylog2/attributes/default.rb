@@ -1,6 +1,8 @@
 default.graylog2.basedir = "/var/graylog2"
-default.graylog2.server.version = "0.9.5p1"
-default.graylog2.web_interface.version = "0.9.5p2"
+default.graylog2.server.version = "0.9.6p1-RC1"
+default.graylog2.web_interface.version = "0.9.6p1-RC1"
+
+default.graylog2.elasticsearch.version="0.19.2"
 
 default.graylog2.mongodb.host = "localhost"
 default.graylog2.mongodb.port = 27017
@@ -18,3 +20,5 @@ default.graylog2.send_stream_alarms = true
 default.graylog2.send_stream_subscriptions = true
 default.graylog2.stream_alarms_cron_minute = "*/15"
 default.graylog2.stream_subscriptions_cron_minute = "*/15"
+
+default.graylog2.external_hostname = nil

@@ -17,27 +17,31 @@
 # limitations under the License.
 #
 
-# Add APT public key for the 10gen MongoDB repo
-execute "apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10" do
-  not_if 'apt-key list | grep "7F0CEB10"'
-end
-
-# Add the 10gen MongoDB repository to APT
-apt_repository "mongodb" do
-  uri "http://downloads-distro.mongodb.org/repo/ubuntu-upstart"
-  distribution "dist"
-  components ["10gen"]
-  action :add
-end
+# Install MongoDB from 10gen repository
+include_recipe "mongodb::10gen_repo"
+include_recipe "mongodb::default"
 
 # Install required APT packages
 package "openjdk-6-jre"
-package "mongodb-10gen"
 
 # Create the release directory
 directory "#{node.graylog2.basedir}/rel" do
   mode 0755
   recursive true
+end
+
+# Download the elasticsearch dpkg
+
+remote_file "elasticsearch_dpkg" do
+    path "#{node.graylog2.basedir}/rel/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    source "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    action :create_if_missing
+end
+
+dpkg_package "elasticsearch" do
+    source "#{node.graylog2.basedir}/rel/elasticsearch-#{node.graylog2.elasticsearch.version}.deb"
+    version node.graylog2.elasticsearch.version
+    action :install
 end
 
 # Download the desired version of Graylog2 server from GitHub
