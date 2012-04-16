@@ -19,7 +19,9 @@
 
 # Install required APT packages
 package "build-essential"
-package "postfix"
+if node.graylog2.email_package
+    package node.graylog2.email_package
+end
 
 # Install gem dependencies
 gem_package "bundler"

@@ -3,6 +3,7 @@
 #
 
 <VirtualHost *:80>
+  ServerName <%= node.graylog2.server_name %>
   DocumentRoot <%= node.graylog2.basedir %>/web/public
   <Directory <%= node.graylog2.basedir %>/web/public>
     Allow from all
