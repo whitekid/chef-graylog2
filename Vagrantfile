@@ -5,7 +5,7 @@ Vagrant::Config.run do |config|
   config.vm.box = "lucid64"
 
   # Forward the vm's port 80 to your 8080
-  config.vm.forward_port "http", 80, 8080
+  config.vm.forward_port 80, 8080
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
