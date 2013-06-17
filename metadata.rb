@@ -1,11 +1,12 @@
-maintainer        "Medidata Solutions Inc."
-maintainer_email  "cloudteam@mdsol.com"
+name              "graylog2"
+maintainer        "Phil Sturgeon"
+maintainer_email  "email@philsturgeon.co.uk"
 license           "Apache 2.0"
 description       "Installs and configures Graylog2"
-version           "0.0.6"
+version           "0.1.0"
 recipe            "graylog2", "Installs and configures Graylog2"
 
-# Only supporting Ubuntu 10.x
+# Only supporting Ubuntu 10.x and up
 supports "ubuntu"
 
 # OpsCode cookbook dependencies

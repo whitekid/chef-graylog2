@@ -1,7 +1,0 @@
-site "http://community.opscode.com/api/v1"
-
-cookbook "graylog2",
-  :git => "git://github.com/Graylog2/chef-repo.git"
-cookbook "apache2", "1.1.6"
-cookbook "apt", "1.4.0"
-cookbook "mongodb", "0.11.0"

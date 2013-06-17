@@ -23,11 +23,34 @@ include_recipe "graylog2::web_interface"
 # Install Apache using the OpsCode community cookbook
 include_recipe "apache2"
 
-# Install apache mod-passenger (NOTE: This should be added to base apache2 cookbook, but keeping it
-#    here allows the use of the 'vanilla' Opscode apache2 cookbook which doesn't have a mod_passenger.rb
-#    recipe. This should be compatible with the above, since the Opscode cookbook uses apt to install
-#    apache.
-package "libapache2-mod-passenger"
+# Install gem dependencies
+rbenv_gem "passenger" do
+	ruby_version "#{node[:graylog2][:ruby_version]}"
+	version "#{node[:graylog2][:passenger_version]}"
+end
+
+# Install packages to build Apache module:
+
+# -- Curl development headers with SSL support
+package "libcurl4-openssl-dev"
+
+# -- Apache 2 development headers
+package "apache2-threaded-dev"
+
+# -- Apache Portable Runtime (APR) development headers
+package "libapr1-dev"
+
+# -- Apache Portable Runtime Utility (APU) development headers
+package "libaprutil1-dev"
+
+# Build the Apache module
+bash "install-apache-module" do
+  cwd "#{node[:graylog2][:basedir]}/web"
+  code "source /etc/profile.d/rbenv.sh && yes | passenger-install-apache2-module"
+  creates "/opt/rbenv/versions/#{node[:graylog2][:ruby_version]}/lib/ruby/gems/1.9.1/gems/passenger-#{node[:graylog2][:passenger_version]}/libout/apache2/mod_passenger.so"
+  user "root"
+  notifies :restart, "service[apache2]"
+end
 
 # Create an Apache vhost for the Graylog2 web interface
 template "apache-vhost-conf" do
