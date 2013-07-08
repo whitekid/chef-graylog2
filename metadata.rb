@@ -13,3 +13,4 @@ supports "ubuntu"
 depends "apt"     # http://community.opscode.com/cookbooks/apt
 depends "apache2" # http://community.opscode.com/cookbooks/apache2
 depends "mongodb" # http://community.opscode.com/cookbooks/mongodb
+depends "rbenv"   # http://community.opscode.com/cookbooks/rbenv
