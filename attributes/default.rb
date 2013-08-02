@@ -1,6 +1,7 @@
 default[:graylog2][:repo] = 'http://download.graylog2.org'
 default[:graylog2][:basedir] = "/var/graylog2"
 default[:graylog2][:server][:version] = "0.11.0"
+default[:graylog2][:web_interface][:repo] = 'https://github.com/Graylog2/graylog2-web-interface'
 default[:graylog2][:web_interface][:version] = "0.11.0"
 default[:graylog2][:web_interface][:listen_port] = 4500 # if this is not 80 you need to override default['apache']['listen_ports'] = [ "80" ] 
 
